@@ -3,14 +3,17 @@
   <el-container>
     <!-- 头部部分 -->
     <el-header>
-        <topBar />
+      <topBar/>
     </el-header>
     <el-container>
       <!-- 左侧侧边栏部分 -->
       <el-aside width="200px">
-          <sideBar />
+        <sideBar/>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <!-- 中间主题内容部分 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
   <!-- 中间内容部分 -->
@@ -20,9 +23,21 @@
 import sideBar from "../../../layout/sideBar.vue";
 import topBar from "../../../layout/topBar.vue";
 export default {
+  // 1）在 beforeCreate【钩子函数】 判断是否存在  token
+  // 2）如果存在 token，继续向下执行
+  // 3）如果不存在，直接跳转回登录页面
   components: {
     sideBar,
     topBar
+  },
+  beforeCreate() {
+    // 得到 token
+    var token = window.localStorage.getItem("token");
+    if (!token) {
+      this.$router.push("/login");
+      this.$message.error("您还没有登录，请先登录");
+      return;
+    }
   }
 };
 </script>

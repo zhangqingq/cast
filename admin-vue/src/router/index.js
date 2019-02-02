@@ -3,6 +3,7 @@ import Router from 'vue-router'
 // 引入 登录 组件
 import Login from '@/components/login/login.vue'
 import Home from '@/components/pages/home/home.vue'
+import Users from '../components/pages/users/users.vue'
 
 Vue.use(Router)
 
@@ -20,7 +21,13 @@ export default new Router({
     {
       path: '/home',
       name: 'home',
-      component: Home
+      component: Home,
+      children:[
+        {
+          path:'/users',
+          component:Users
+        }
+      ]
     },
     
   ]

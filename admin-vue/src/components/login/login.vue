@@ -34,8 +34,10 @@ export default {
           { required: true, message: "请输入用户名称", trigger: "blur" },
           { min: 3, max: 15, message: "长度在 3 到 15 个字符", trigger: "blur" }
         ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" },
-        { min: 6,  message: "密码长度最少为 6 个字符", trigger: "blur" }]
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, message: "密码长度最少为 6 个字符", trigger: "blur" }
+        ]
       }
     };
   },
@@ -58,8 +60,10 @@ export default {
               message: meta.msg,
               type: "success"
             });
-            // this.$router.push("/home");
-            this.$router.push('/home')
+            console.log(data);
+            localStorage.setItem("token", data.token);
+            window.localStorage.setItem("token", data.token);
+            this.$router.push("/home");
           } else {
             this.$message.error(meta.msg);
           }

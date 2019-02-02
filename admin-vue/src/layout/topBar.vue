@@ -13,15 +13,43 @@
     </el-col>
     <el-col :span="6">
       <div class="grid-content bg-purple logon">
-        <a href="#">退出</a>
+        <el-button type="text" @click="logout">退出</el-button>
       </div>
     </el-col>
   </el-row>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    logout() {
+      this.$confirm("您确定要退出登录, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "退出成功!"
+          });
+
+          this.$router.push("/login");
+          localStorage.removeItem("token");
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消退出"
+          });
+        });
+    }
+  }
+};
 </script>
 
 <style>
+.logon span {
+  font-size: 20px;
+}
 </style>
