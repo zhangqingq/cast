@@ -34,36 +34,37 @@ export default {
           { required: true, message: "请输入用户名称", trigger: "blur" },
           { min: 3, max: 15, message: "长度在 3 到 15 个字符", trigger: "blur" }
         ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" },
-        { min: 6,  message: "密码长度最少为 6 个字符", trigger: "blur" }]
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, message: "密码长度最少为 6 个字符", trigger: "blur" }
+        ]
       }
     };
   },
   methods: {
-    login() {
-      this.$http
-        .request({
-          url: "/login",
-          method: "post",
-          data: {
-            username: this.loginDate.username,
-            password: this.loginDate.password
-          }
-        })
-        .then(res => {
-          console.log(res);
-          var { meta, data } = res.data;
-          if (meta.status === 200) {
-            this.$message({
-              message: meta.msg,
-              type: "success"
-            });
-            // this.$router.push("/home");
-            this.$router.push('/home')
-          } else {
-            this.$message.error(meta.msg);
-          }
+    async login() {
+      var res = await this.$http.request({
+        url: "/login",
+        method: "post",
+        data: {
+          username: this.loginDate.username,
+          password: this.loginDate.password
+        }
+      });
+      console.log(res);
+      var { meta, data } = res.data;
+      if (meta.status === 200) {
+        this.$message({
+          message: meta.msg,
+          type: "success"
         });
+        // 登陆成功调转到 home 页面
+        this.$router.push("/home");
+        // 当登陆成功之后保存登录信息
+        localStorage.setItem("token", data.token);
+      } else {
+        this.$message.error(meta.msg);
+      }
     }
   }
 };
