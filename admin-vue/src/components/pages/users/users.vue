@@ -51,9 +51,9 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" circle></el-button>
-          <el-button type="danger" icon="el-icon-delete" circle></el-button>
-          <el-button type="success" icon="el-icon-check" circle></el-button>
+          <el-button type="primary" icon="el-icon-edit" circle @click="openEdit(scope.row.id)"></el-button>
+          <el-button type="danger" icon="el-icon-delete" circle @click="deleteUsers(scope.row.id)"></el-button>
+          <el-button type="success" icon="el-icon-check" circle @click="openRole(scope.row.id)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -97,6 +97,49 @@
         <el-button type="primary" @click="addUsers">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 操作中第一个按钮的功能 -->
+    <el-dialog title="修改用户" :visible.sync="dialogEdit">
+      <el-form :model="editObj">
+        <el-form-item label="用户名" :label-width="formLabelWidth">
+          <el-input v-model="editObj.username" autocomplete="off" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" :label-width="formLabelWidth">
+          <el-input v-model="editObj.email" type="email" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" :label-width="formLabelWidth">
+          <el-input v-model="editObj.mobile" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogEdit = false">取 消</el-button>
+        <el-button type="primary" @click="editUsers(editObj.id)">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 操作中第三个按钮的功能 【分配用户角色】-->
+    <el-dialog title="分配角色" :visible.sync="dialogRole">
+      <el-form :model="roleObj">
+        <el-form-item label="用户名" :label-width="formLabelWidth">
+          <el-input v-model="roleObj.username" autocomplete="off" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="角色设置" :label-width="formLabelWidth">
+          {{roleObj.rid}}
+          <!-- {{roleList}} -->
+          <el-select v-model="roleObj.rid" placeholder="请选择">
+            <el-option :disabled="true" label="请选择角色" :value="-1"></el-option>
+            <el-option
+              v-for="item in roleList"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogRole = false">取 消</el-button>
+        <el-button type="primary" @click="usersRole(roleObj.id,roleObj.rid)">确 定</el-button>
+      </div>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -113,7 +156,13 @@ export default {
       dialogAdd: false,
       addObj: {},
       formLabelWidth: "120px",
-      total: 0
+      total: 0,
+      dialogEdit: false,
+      editObj: {},
+      roleObj: {},
+      dialogRole: false,
+      // 所有的角色数据
+      roleList: []
     };
   },
   methods: {
@@ -202,6 +251,134 @@ export default {
           message: meta.msg,
           type: "success"
         });
+      } else {
+        this.$message.error(meta.msg);
+      }
+    },
+    // 修改用户的邮箱，电话【操作中的第一个按钮的功能】
+    // 1, 打开弹框，将该用户信息展示在弹框中
+    async openEdit(id) {
+      this.dialogEdit = true;
+      var res = await this.$http.request({
+        url: `users/${id}`,
+        method: "get",
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      });
+      //   console.log(res);
+      var { meta, data } = res.data;
+      if (meta.status === 200) {
+        this.editObj = data;
+      } else {
+        this.$message.error(meta.msg);
+      }
+    },
+    // 2, 修改用户信息
+    async editUsers(id) {
+      var res = await this.$http.request({
+        url: `users/${id}`,
+        method: "put",
+        data: {
+          ...this.editObj
+        },
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      });
+      console.log(res);
+      var { meta } = res.data;
+      if (meta.status === 200) {
+        this.$message({
+          message: meta.msg,
+          type: "success"
+        });
+        //   关闭弹框
+        this.dialogEdit = false;
+        this.render();
+      } else {
+        this.$message.error(meta.msg);
+      }
+    },
+    // 【删除单个用户信息】
+    async deleteUsers(id) {
+      var res = await this.$http.request({
+        url: `users/${id}`,
+        method: "delete",
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      });
+      var { meta } = res.data;
+      if (meta.status === 200) {
+        this.$message({
+          message: meta.msg,
+          type: "success"
+        });
+        this.render();
+      } else {
+        this.$message.error(meta.msg);
+      }
+    },
+    // 设置用户角色
+    // 1，打开弹框，将用户名和角色列表渲染在弹框中
+    async openRole(id) {
+      this.dialogRole = true;
+      this.getRoleList();
+      var res = await this.$http.request({
+        url: `users/${id}`,
+        method: "get",
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      });
+      //   console.log(res);
+      var { meta, data } = res.data;
+      if (meta.status === 200) {
+        this.roleObj = data;
+        console.log(this.roleObj);
+      } else {
+        this.$message.error(meta.msg);
+      }
+    },
+    // 获取权限列表
+    async getRoleList() {
+      var res = await this.$http.request({
+        url: `roles`,
+        method: "get",
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      });
+      //   console.log(res);
+      var { meta, data } = res.data;
+      if (meta.status === 200) {
+        this.roleList = data;
+        console.log(data);
+      } else {
+        this.$message.error(meta.msg);
+      }
+    },
+    // 设置用户角色
+    async usersRole(id, rid) {
+      var res = await this.$http.request({
+        url: `users/${id}/role`,
+        method: "put",
+        data: {
+          rid: rid
+        },
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      });
+      //   console.log(res);
+      var { meta } = res.data;
+      if (meta.status === 200) {
+        this.$message({
+          message: meta.msg,
+          type: "success"
+        });
+        this.dialogRole = false;
       } else {
         this.$message.error(meta.msg);
       }
