@@ -8,6 +8,7 @@ import router from './router'
 
 import myBread from './layout/bread/mybread.vue'
 
+// import myaxios from './assets/js/myaxios.js'
 import myaxios from './assets/js/myaxios.js'
 
 // 将面包屑导航注册为 全局中间件
