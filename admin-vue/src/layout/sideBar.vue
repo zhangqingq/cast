@@ -4,14 +4,14 @@
               default-active  默认激活选中的选项
               unique-opened	  是否只保持一个子菜单的展开
   -->
-  <el-menu default-active="2" class="el-menu-vertical-demo" unique-opened="true">
+  <el-menu default-active="2" class="el-menu-vertical-demo" :unique-opened="true" :router="true">
     <el-submenu index="1">
       <template slot="title">
         <i class="el-icon-location"></i>
         <span>用户管理</span>
       </template>
       <el-menu-item-group>
-        <el-menu-item index="1-1">用户列表</el-menu-item>
+        <el-menu-item index="/users">用户列表</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
     <el-submenu index="2">

@@ -58,6 +58,8 @@ export default {
               message: meta.msg,
               type: "success"
             });
+            // 设置 token 信息
+            localStorage.setItem('token',data.token)
             // this.$router.push("/home");
             this.$router.push('/home')
           } else {

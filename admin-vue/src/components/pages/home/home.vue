@@ -3,14 +3,16 @@
   <el-container>
     <!-- 头部部分 -->
     <el-header>
-        <topBar />
+      <topBar/>
     </el-header>
     <el-container>
       <!-- 左侧侧边栏部分 -->
       <el-aside width="200px">
-          <sideBar />
+        <sideBar/>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
   <!-- 中间内容部分 -->
