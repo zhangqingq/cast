@@ -6,12 +6,7 @@
             3，用户信息表格
             4, 分页
     -->
-    <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
+    <myBread firstNav="用户管理" lastNav="用户列表" />
     <!-- 搜索框 -->
     <el-row>
       <el-col :span="7">
@@ -391,9 +386,5 @@ export default {
 </script>
 
 <style>
-.el-breadcrumb {
-  height: 40px;
-  line-height: 40px;
-  padding-left: 10px;
-}
+
 </style>
