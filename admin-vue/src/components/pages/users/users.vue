@@ -6,7 +6,7 @@
             3，用户信息表格
             4, 分页
     -->
-    <myBread firstNav="用户管理" lastNav="用户列表" />
+    <myBread firstNav="用户管理" lastNav="用户列表"/>
     <!-- 搜索框 -->
     <el-row>
       <el-col :span="7">
@@ -169,11 +169,19 @@ export default {
           query: this.search,
           pagenum: this.pagenum,
           pagesize: this.pagesize
-        },
-        headers: {
-          Authorization: localStorage.getItem("token")
         }
+        // ,
+        // headers: {
+        //   Authorization: localStorage.getItem("token")
+        // }
       });
+      // axios
+            var res = await this.$http.get(`/users?pagenum=${this.pagenum}&pagesize=${this.pagesize}&query=${this.search}`)
+            var { meta, data } = res.data
+            if (meta.status === 200) {
+                this.dataList = data.users
+                this.total = data.total
+            }
 
       console.log(res);
       var { meta, data } = res.data;
@@ -193,10 +201,11 @@ export default {
         method: "post",
         data: {
           ...this.addObj
-        },
-        headers: {
-          Authorization: localStorage.getItem("token")
         }
+        // ,
+        // headers: {
+        //   Authorization: localStorage.getItem("token")
+        // }
       });
       console.log(res);
       var { meta } = res.data;
@@ -234,10 +243,11 @@ export default {
     async setState(id, state) {
       var res = await this.$http.request({
         url: `users/${id}/state/${state}`,
-        method: "put",
-        headers: {
-          Authorization: localStorage.getItem("token")
-        }
+        method: "put"
+        // ,
+        // headers: {
+        //   Authorization: localStorage.getItem("token")
+        // }
       });
       //   console.log(res);
       var { meta, data } = res.data;
@@ -256,10 +266,11 @@ export default {
       this.dialogEdit = true;
       var res = await this.$http.request({
         url: `users/${id}`,
-        method: "get",
-        headers: {
-          Authorization: localStorage.getItem("token")
-        }
+        method: "get"
+        // ,
+        // headers: {
+        //   Authorization: localStorage.getItem("token")
+        // }
       });
       //   console.log(res);
       var { meta, data } = res.data;
@@ -276,10 +287,11 @@ export default {
         method: "put",
         data: {
           ...this.editObj
-        },
-        headers: {
-          Authorization: localStorage.getItem("token")
         }
+        // ,
+        // headers: {
+        //   Authorization: localStorage.getItem("token")
+        // }
       });
       console.log(res);
       var { meta } = res.data;
@@ -299,10 +311,11 @@ export default {
     async deleteUsers(id) {
       var res = await this.$http.request({
         url: `users/${id}`,
-        method: "delete",
-        headers: {
-          Authorization: localStorage.getItem("token")
-        }
+        method: "delete"
+        // ,
+        // headers: {
+        //   Authorization: localStorage.getItem("token")
+        // }
       });
       var { meta } = res.data;
       if (meta.status === 200) {
@@ -322,10 +335,11 @@ export default {
       this.getRoleList();
       var res = await this.$http.request({
         url: `users/${id}`,
-        method: "get",
-        headers: {
-          Authorization: localStorage.getItem("token")
-        }
+        method: "get"
+        // ,
+        // headers: {
+        //   Authorization: localStorage.getItem("token")
+        // }
       });
       //   console.log(res);
       var { meta, data } = res.data;
@@ -340,10 +354,11 @@ export default {
     async getRoleList() {
       var res = await this.$http.request({
         url: `roles`,
-        method: "get",
-        headers: {
-          Authorization: localStorage.getItem("token")
-        }
+        method: "get"
+        // ,
+        // headers: {
+        //   Authorization: localStorage.getItem("token")
+        // }
       });
       //   console.log(res);
       var { meta, data } = res.data;
@@ -361,10 +376,11 @@ export default {
         method: "put",
         data: {
           rid: rid
-        },
-        headers: {
-          Authorization: localStorage.getItem("token")
         }
+        // ,
+        // headers: {
+        //   Authorization: localStorage.getItem("token")
+        // }
       });
       //   console.log(res);
       var { meta } = res.data;
@@ -386,5 +402,4 @@ export default {
 </script>
 
 <style>
-
 </style>

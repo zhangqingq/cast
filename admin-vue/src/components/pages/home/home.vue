@@ -33,13 +33,15 @@ export default {
   },
   beforeCreate() {
     // 得到 token
-    var token = window.localStorage.getItem("token");
-    if (!token) {
-      this.$router.push("/login");
-      this.$message.error("您还没有登录，请先登录");
-      return;
-    }
+    // var token = window.localStorage.getItem("token");
+    // if (!token) {
+    //   this.$router.push("/login");
+    //   this.$message.error("您还没有登录，请先登录");
+    //   return;
+    // }
   }
+  
+  // vue-router 提供的导航守卫主要用来通过跳转或取消的方式守卫导航
 };
 </script>
 
